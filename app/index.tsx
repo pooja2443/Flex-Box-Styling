@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Switch, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Switch, TouchableOpacity, Dimensions } from "react-native";
 import Slider from '@react-native-community/slider';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -9,6 +9,18 @@ function App() {
   const [autoRotate,  setAutoRotate] = useState(false);
   const [brightness, setBrightness] = useState(20);
   const [isDrakMode,  setIsDarkMode] =  useState(false);
+  const [dimensions, setDimensions] = useState({
+    window : Dimensions.get("window")
+  })
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener("change", ({window})=> {setDimensions({window})})
+    return () => subscription ?.remove()
+  })
+
+  const {window} = dimensions;
+  const windowWidth = window.width;
+  const windowHeight = window.height;
 
   const theme = {
     backgroundColor : isDrakMode ? "#1a1a1a" : "#fff",
@@ -18,6 +30,7 @@ function App() {
 
   return(
     <View style={[styles.container, {backgroundColor : theme.backgroundColor}]}>
+    <Text style={{color: theme.textColor, marginBottom: 10}}>Width: {windowWidth}, Height: {windowHeight}</Text>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Display Setting</Text>
       </View>
